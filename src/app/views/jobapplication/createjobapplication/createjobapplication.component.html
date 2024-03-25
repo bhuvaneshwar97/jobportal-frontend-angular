@@ -1,0 +1,132 @@
+<mat-card>
+  <mat-card-header>
+    <ng-container *ngIf="currentId === 'new'; else update">
+      <span>
+        <i class="fa fa-navicon"></i><b class="card-title headinng-style">Create Job Application</b>
+      </span>
+      <br /><br />
+    </ng-container>
+    <ng-template #update>
+      <span>
+        <i class="fa fa-navicon"></i><b class="card-title headinng-style">Update Job Application</b>
+      </span>
+      <br /><br />
+    </ng-template>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="row">
+      <div class="col-sm-6">
+        <mat-form-field appearance="outline" class="col-12">
+          <mat-label>Name</mat-label>
+          <input matInput placeholder="Name" formControlName="name">
+          <mat-error
+            *ngIf="myForm.get('name')!.invalid && myForm.get('name')!.touched && myForm.get('name')!.errors?.['required']">
+            Name is required
+          </mat-error>
+          <mat-error
+            *ngIf="myForm.get('name')!.invalid && myForm.get('name')!.touched && myForm.get('name')!.errors?.['noLength']">
+            Name should be greater than 3 characters!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field appearance="outline" class="col-12 button-style">
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dob">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error
+            *ngIf="myForm.get('dob')!.invalid && myForm.get('dob')!.touched && myForm.get('dob')!.errors?.['required']">
+            Date of birth is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field appearance="outline" class="col-12">
+          <mat-label>City</mat-label>
+          <input matInput placeholder="City" formControlName="city">
+          <mat-error
+            *ngIf="myForm.get('city')!.invalid && myForm.get('city')!.touched && myForm.get('city')!.errors?.['required']">
+            City is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field appearance="outline" class="col-12 button-style">
+          <mat-label>Phone Number</mat-label>
+          <input matInput placeholder="Phone Number" formControlName="phone">
+          <mat-error
+            *ngIf="myForm.get('phone')!.invalid && myForm.get('phone')!.touched && myForm.get('phone')!.errors?.['required']">
+            Phone number is required
+          </mat-error>
+          <mat-error
+            *ngIf="myForm.get('phone')!.invalid && myForm.get('phone')!.touched && myForm.get('phone')!.errors?.['noLength']">
+            Phone number must be 10 digits!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12">
+        <mat-label>Description*</mat-label>
+        <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
+        <mat-error
+          *ngIf="myForm.get('description')!.invalid && myForm.get('description')!.touched && myForm.get('description')!.errors?.['required']">
+          Description is required
+        </mat-error>
+        <br/>
+      </div>
+      <div class="col-sm-6" *ngIf="resumeUploaded">
+        <div class="col-12" >
+          <b>Uploaded Resume</b>
+          <br />
+          <span *ngIf="resumeUploaded">{{ resumeUploaded}}</span>
+          <a *ngIf="resumeUploaded" [href]="getResumeDownloadUrl()" download>
+            <mat-icon>cloud_download</mat-icon>
+          </a>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="col-12">
+          <b>Upload New Resume (PDF, DOCX)*</b>
+          <br />
+          <input type="file" (change)="onResumeFileSelected($event)" />
+          <mat-error
+            *ngIf="myForm.get('resume')!.invalid && myForm.get('resume')!.touched && myForm.get('resume')!.errors?.['required']">
+            Resume file is required
+          </mat-error>
+        </div>
+        <br/>
+      </div>
+      <div class="col-sm-6" *ngIf="additionalDocsUploaded">
+        <div class="col-12" >
+          <b>Uploaded Additional Documents</b>
+          <br />
+          <ng-container *ngIf="additionalDocsUploaded">
+            <span>additionalDocs.zip</span>
+            <a [href]="getDocumentDownloadUrl()" download>
+              <mat-icon>cloud_download</mat-icon>
+            </a>
+            <br />
+          </ng-container>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="col-12">
+          <b>Upload New Additional Documents (PDF, DOCX, Multiple files. Max upto 5)*</b>
+          <br />
+          <input type="file" (change)="onAdditionalDocsFileSelected($event)" multiple />
+          <mat-error
+            *ngIf="myForm.get('additionalDocs')!.invalid && myForm.get('additionalDocs')!.touched && myForm.get('additionalDocs')!.errors?.['required']">
+            Additional documents are required
+          </mat-error>
+        </div>
+        <br/>
+      </div>
+      <div class="align-center">
+        <button type="reset" mat-raised-button color="warn" (click)="navigate('/jobapplications')"
+          class="cancel-style">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" class="button-style">Submit</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
